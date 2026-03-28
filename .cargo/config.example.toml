@@ -1,0 +1,15 @@
+[build]
+target = "xtensa-esp32s3-espidf"
+# ESP-IDF's build system fails on long Windows paths.
+# Redirecting target output to a short root path works around this limit.
+target-dir = ""
+
+[target.xtensa-esp32s3-espidf]
+linker = "ldproxy"
+# Flash and open a serial monitor after building.
+# Install espflash with: cargo install espflash
+runner = "espflash flash --monitor"
+rustflags = ["--cfg", "espidf_time64"]
+
+[unstable]
+build-std = ["std", "panic_abort"]

@@ -1,0 +1,11 @@
+[package]
+name = "shared"
+version = "0.1.0"
+edition = "2024"
+
+# Prevent Cargo from auto-discovering src/main.rs as a binary.
+autobins = false
+
+[lib]
+name = "shared"
+path = "src/lib.rs"

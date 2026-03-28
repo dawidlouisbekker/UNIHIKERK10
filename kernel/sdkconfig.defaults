@@ -1,0 +1,19 @@
+# ---------------------------------------------------------------------------
+# ESP32-S3N16R8 sdkconfig overrides
+# esp-idf-sys merges this file into the ESP-IDF Kconfig system at build time.
+# ---------------------------------------------------------------------------
+
+# Enable the 8 MB octal PSRAM (the "R8" in N16R8).
+CONFIG_ESP32S3_SPIRAM_SUPPORT=y
+CONFIG_SPIRAM=y
+CONFIG_SPIRAM_MODE_OCT=y
+CONFIG_SPIRAM_SPEED_80M=y
+CONFIG_SPIRAM_USE_MALLOC=y
+
+# Allocate PSRAM as part of the default heap so alloc works transparently.
+CONFIG_SPIRAM_MALLOC_ALWAYSINTERNAL=16384
+
+# USB-CDC serial port (USB-C connector on the K10).
+# This lets `espflash flash --monitor` work without a separate UART adapter.
+CONFIG_ESP_CONSOLE_USB_CDC=y
+CONFIG_ESP_CONSOLE_SECONDARY_NONE=y

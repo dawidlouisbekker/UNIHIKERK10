@@ -1,0 +1,35 @@
+[package]
+name = "kernel"
+version = "0.1.0"
+edition = "2024"
+
+[[bin]]
+name = "kernel"
+path = "src/main.rs"
+
+[dependencies]
+shared = { path = "../shared" }
+
+# ESP-IDF ecosystem
+esp-idf-sys  = { version = "0.37.2", features = ["binstart"] }
+esp-idf-hal  = "0.46.2"
+esp-idf-svc  = "0.52.1"
+
+# Error handling
+anyhow = "1"
+
+# Logging (maps to ESP-IDF's log component)
+log = "0.4"
+
+[build-dependencies]
+embuild = "0.33.1"
+
+# Tells esp-idf-sys which ESP-IDF version to download and build.
+[package.metadata.esp-idf-sys]
+esp_idf_version = "v5.3.1"
+
+[profile.release]
+opt-level = "s"     # Optimise for binary size
+lto        = true
+codegen-units = 1
+overflow-checks = false

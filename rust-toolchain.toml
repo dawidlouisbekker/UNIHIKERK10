@@ -1,0 +1,4 @@
+[toolchain]
+# The Xtensa LX7 architecture (ESP32-S3) requires Espressif's Rust fork.
+# Install it with: cargo install espup && espup install
+channel = "esp"
