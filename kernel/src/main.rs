@@ -14,9 +14,9 @@ use shared::{AccelReading, MotionDetector};
 // https://www.unihiker.com/wiki/K10/HardwareReference/hardwarereference_stepschematic/
 // ---------------------------------------------------------------------------
 
-/// Internal I2C bus shared by SC7A20H, AHT20, and LTR303ALS.
-const PIN_I2C_SDA: i32 = 8;
-const PIN_I2C_SCL: i32 = 9;
+/// Internal I2C bus (P20/SDA = GPIO47, P19/SCL = GPIO45) per schematic page 1 & 10.
+const PIN_I2C_SDA: i32 = 47;
+const PIN_I2C_SCL: i32 = 45;
 
 // ---------------------------------------------------------------------------
 // SC7A20H triaxial accelerometer (SILAN) – register map compatible with LIS3DH
@@ -41,6 +41,24 @@ const WHO_AM_I_EXPECTED: u8 = 0x11;
 
 /// I2C timeout for all transactions (ms).
 const I2C_TIMEOUT_MS: u32 = 50;
+
+// ---------------------------------------------------------------------------
+// I2C bus scanner – logs every responsive address; remove once pins confirmed
+// ---------------------------------------------------------------------------
+
+fn i2c_scan(i2c: &mut I2cDriver<'_>) {
+    info!("I2C scan on SDA=GPIO{} SCL=GPIO{} …", PIN_I2C_SDA, PIN_I2C_SCL);
+    let mut found = false;
+    for addr in 0x08u8..=0x77 {
+        if i2c.write(addr, &[], I2C_TIMEOUT_MS).is_ok() {
+            info!("  found device at 0x{:02X}", addr);
+            found = true;
+        }
+    }
+    if !found {
+        warn!("  no devices found – SDA/SCL pins are likely wrong");
+    }
+}
 
 // ---------------------------------------------------------------------------
 // Motion-detection tuning
@@ -117,8 +135,6 @@ fn main() -> anyhow::Result<()> {
     // Required by esp-idf-sys to apply Rust ↔ C shims.
     esp_idf_sys::link_patches();
 
-    // Route `log` macros to ESP-IDF's logging subsystem (visible over USB-CDC).
-    esp_idf_svc::log::EspLogger::initialize_default();
 
     info!("=== UNIHIKER K10 – Accelerometer Motion Detection ===");
     info!("Chip: ESP32-S3N16R8  |  Sensor: SC7A20H (±2 G, 12-bit, 100 Hz)");
@@ -126,14 +142,19 @@ fn main() -> anyhow::Result<()> {
     let peripherals = Peripherals::take()?;
     let pins = peripherals.pins;
 
-    // I2C @ 400 kHz (fast-mode) on the internal bus used by on-board sensors.
-    let i2c_config = I2cConfig::new().baudrate(400_u32.kHz().into());
+    // I2C @ 100 kHz (standard-mode) – more tolerant of marginal pull-ups.
+    // Switch back to 400 kHz once the sensor is confirmed working.
+    let i2c_config = I2cConfig::new().baudrate(100_u32.kHz().into());
     let i2c = I2cDriver::new(
         peripherals.i2c0,
         pins.gpio8, // SDA – verify with schematic
         pins.gpio9, // SCL – verify with schematic
         &i2c_config,
     )?;
+
+    // Scan the bus first so the correct address/pins appear in the log.
+    let mut i2c = i2c;
+    i2c_scan(&mut i2c);
 
     let mut accel = Sc7a20h::new(i2c, SC7A20H_ADDR);
 

@@ -2,7 +2,7 @@
 target = "xtensa-esp32s3-espidf"
 # ESP-IDF's build system fails on long Windows paths.
 # Redirecting target output to a short root path works around this limit.
-target-dir = ""
+target-dir = "./out"
 
 [target.xtensa-esp32s3-espidf]
 linker = "ldproxy"
