@@ -1,4 +1,5 @@
 pub mod accelerometer;
+pub mod screen;
 
 
 pub fn init() {

@@ -1,20 +1,21 @@
 use anyhow::bail;
 use esp_idf_hal::{
-    delay::FreeRtos,
-    i2c::{I2cConfig, I2cDriver},
-    units::FromValueType,
+    i2c::{I2cDriver}
 };
 use esp_idf_sys as _; // pulls in the ESP-IDF link patches
-use log::{error, info, warn};
-use shared::{AccelReading, MotionDetector};
+use log::{info};
+use shared::{AccelReading};
 
-
+use crate::hw::{
+    CTRL1_100HZ_ALL_AXES, CTRL4_BDU_HR_2G, I2C_TIMEOUT_MS, PIN_I2C_SCL, PIN_I2C_SDA,
+    REG_CTRL1, REG_CTRL4, REG_OUT_X_L, REG_WHO_AM_I, WHO_AM_I_EXPECTED,
+};
 
 // ---------------------------------------------------------------------------
 // SC7A20H driver
 // ---------------------------------------------------------------------------
 
-struct Sc7a20h<'d> {
+pub struct Sc7a20h<'d> {
     i2c: I2cDriver<'d>,
     addr: u8,
 }

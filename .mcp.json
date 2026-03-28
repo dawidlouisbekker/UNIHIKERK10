@@ -1,0 +1,8 @@
+{
+  "mcpServers": {
+    "schematic": {
+      "command": "/home/dawid/.venv/bin/python3",
+      "args": [".claude/mcp/schematic_server.py"]
+    }
+  }
+}

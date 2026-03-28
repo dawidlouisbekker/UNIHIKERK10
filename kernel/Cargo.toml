@@ -15,6 +15,10 @@ esp-idf-sys  = { version = "0.37.2", features = ["binstart"] }
 esp-idf-hal  = "0.46.2"
 esp-idf-svc  = "0.52.1"
 
+# Display
+mipidsi               = "0.10.0"
+embedded-graphics     = "0.8"
+
 # Error handling
 anyhow = "1"
 

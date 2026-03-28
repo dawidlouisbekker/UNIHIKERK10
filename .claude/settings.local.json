@@ -3,5 +3,9 @@
     "allow": [
       "WebSearch"
     ]
-  }
+  },
+  "enabledMcpjsonServers": [
+    "schematic"
+  ],
+  "enableAllProjectMcpServers": true
 }

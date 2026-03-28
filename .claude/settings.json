@@ -1,0 +1,14 @@
+{
+  "permissions": {
+    "allow": [
+      "WebFetch(domain:www.unihiker.com)",
+      "WebFetch(domain:github.com)",
+      "Bash(python3:*)",
+      "Bash(source /home/dawid/.venv/bin/activate)",
+      "Bash(pip3 list:*)"
+    ],
+    "additionalDirectories": [
+      "/home/dawid/Projects/IoT/UNIHIKERK10/.claude"
+    ]
+  }
+}
