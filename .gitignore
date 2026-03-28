@@ -5,3 +5,7 @@ target/
 /.cargo/config.toml
 
 out/
+
+/*/.venv
+/*/__pycache__/
+/*/*/__pycache__/
